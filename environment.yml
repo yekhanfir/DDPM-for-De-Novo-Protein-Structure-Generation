@@ -1,0 +1,15 @@
+name: protein-diffusion
+
+dependencies:
+    - omegaconf
+    - hydra
+    - dataclasses
+    - toolz
+    - numpy
+    - pandas
+    - pandas
+    - tqdm
+    - matplotlib
+    - torchmetrics
+    - pytorch
+    - json
