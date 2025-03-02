@@ -3,7 +3,7 @@ data_config:
   splits_file_path:
   max_seq_len:
 
-Model_config:
+model_config:
   timespteps:
   beta_start:
   beta_end:
