@@ -1,6 +1,5 @@
 import torch
-import pandas as pd
-from data_utils import (
+from data_handling.data_utils import (
     make_np_example, 
     make_fixed_size, 
     center_positions,
