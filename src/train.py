@@ -32,10 +32,10 @@ def get_config(cfg: omegaconf.DictConfig):
             **omegaconf.OmegaConf.to_container(cfg.scheduler_config)
         ),
         data_config = DataConfig(
-            **omegaconf.OmegaConfig.to_container(cfg.data_config)
+            **omegaconf.OmegaConf.to_container(cfg.data_config)
         ),
         model_config = ModelConfig(
-            **omegaconf.omegaconf.to_container(cfg.model_config)
+            **omegaconf.OmegaConf.to_container(cfg.model_config)
         )
     )
     return config
