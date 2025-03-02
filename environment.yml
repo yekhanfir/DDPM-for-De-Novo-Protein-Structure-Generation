@@ -1,8 +1,6 @@
 name: protein-diffusion
 
 dependencies:
-    - omegaconf
-    - hydra
     - dataclasses
     - toolz
     - numpy
@@ -12,4 +10,6 @@ dependencies:
     - matplotlib
     - torchmetrics
     - pytorch
-    - json
+    - pip: 
+        - hydra-core
+        - omegaconf
