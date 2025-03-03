@@ -1,0 +1,10 @@
+torch
+dataclasses
+numpy
+pandas
+pandas
+tqdm
+matplotlib
+torchmetrics
+hydra-core
+omegaconf
