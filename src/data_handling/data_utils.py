@@ -80,7 +80,8 @@ def to_pdb(prot: Protein) -> str:
   """
   restypes = [
     'A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I', 'L', 'K', 'M', 'F', 'P',
-    'S', 'T', 'W', 'Y', 'V', 'X']
+    'S', 'T', 'W', 'Y', 'V', 'X'
+  ]
   res_1to3 = lambda r: RESTYPE_1TO3.get(restypes[r], 'UNK')
 
   pdb_lines = []

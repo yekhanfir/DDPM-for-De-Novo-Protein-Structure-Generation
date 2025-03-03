@@ -19,11 +19,10 @@ class DatasetFromDataframe(torch.utils.data.Dataset):
         )
         self.dataframe['seq_len'] = self.dataframe.seq.apply(lambda x: len(x))
 
-        self.max_seq_length = data_config.max_seq_length
+        self.max_seq_len = data_config.max_seq_len
 
     def get_data(self, data_file_path, splits_file_path):
         df, splits = read_data_from_json(
-            self, 
             data_file_path, 
             splits_file_path
         )
@@ -41,12 +40,12 @@ class DatasetFromDataframe(torch.utils.data.Dataset):
 
 
     def __len__(self):
-        return len(self.data)
+        return len(self.dataframe)
 
     def __getitem__(self, idx):
-        coords_dict = self.data.iloc[idx].coords
+        coords_dict = self.dataframe.iloc[idx].coords
         np_example = make_np_example(coords_dict)
-        make_fixed_size(np_example, self.max_seq_length)
+        make_fixed_size(np_example, self.max_seq_len)
         center_positions(np_example)
         example = {k: torch.tensor(v, dtype=torch.float32) for k, v
                    in np_example.items()}
