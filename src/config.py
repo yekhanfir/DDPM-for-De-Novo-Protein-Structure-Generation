@@ -8,7 +8,7 @@ class DataConfig:
 
 @dataclass
 class ModelConfig:
-    timespteps: int
+    timesteps: int
     beta_start: float
     beta_end: float
 
@@ -23,6 +23,8 @@ class TrainingConfig:
 class SchedulerConfig:
     use_scheduler: bool
     final_div_factor: float
+    div_factor: float
+    max_lr: float
     
 @dataclass
 class GlobalConfig:
