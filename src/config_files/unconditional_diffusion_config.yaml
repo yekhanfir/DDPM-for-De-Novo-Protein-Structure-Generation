@@ -1,21 +1,23 @@
 data_config:
-  data_file_path:
-  splits_file_path:
-  max_seq_len:
+  data_file_path: /app/data/chain_set.jsonl
+  splits_file_path: /app/data/chain_set_splits.json
+  max_seq_len: 256
 
 model_config:
-  timespteps:
-  beta_start:
-  beta_end:
+  timesteps: 1000
+  beta_start: 1e-4
+  beta_end: 2e-2
 
 training_config:
-  lr:
-  epochs:
-  batch_size:
-  shuffle_dataloader: 
+  lr: 3e-4
+  epochs: 10
+  batch_size: 16
+  shuffle_dataloader: True
 
 scheduler_config:
-  use_scheduler:
-  final_div_factor:
+  use_scheduler: True
+  max_lr: 3e-3
+  final_div_factor: 1000
+  div_factor: 30
   
 
