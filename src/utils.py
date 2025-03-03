@@ -28,14 +28,12 @@ def backward_pass_with_scheduler(**kwargs):
     backward_pass(**kwargs)
     scheduler.step()
 
-
 def create_backward_fn(use_scheduler):
     return (
         backward_pass_with_scheduler 
         if use_scheduler
         else backward_pass
     )
-
 
 def save_metrics(metrics_dict):
     with open("metrics_dict.json","w") as f:
