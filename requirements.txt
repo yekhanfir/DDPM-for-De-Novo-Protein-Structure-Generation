@@ -8,3 +8,4 @@ matplotlib
 torchmetrics
 hydra-core
 omegaconf
+biopython
