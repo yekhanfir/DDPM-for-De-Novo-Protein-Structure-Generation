@@ -13,7 +13,7 @@ from config import (
     ModelConfig
 )
 
-from utils import create_scheduler, log_training_out
+from utils import create_scheduler, log_training_out, create_backward_fn
 from data_handling.structure_dataset import DatasetFromDataframe
 
 from tqdm import tqdm
@@ -23,7 +23,7 @@ from tqdm import tqdm
     version_base=None,
     config_name="unconditional_diffusion_config",
 )
-def get_config(cfg: omegaconf.DictConfig):
+def train(cfg: omegaconf.DictConfig):
     config = GlobalConfig(
         training_config = TrainingConfig(
             **omegaconf.OmegaConf.to_container(cfg.training_config)
@@ -38,19 +38,13 @@ def get_config(cfg: omegaconf.DictConfig):
             **omegaconf.OmegaConf.to_container(cfg.model_config)
         )
     )
-    return config
-
-if __name__ == '__main__':
-    config = get_config()
 
     train_set = DatasetFromDataframe(config.data_config)
     train_loader = torch.utils.data.DataLoader(
         train_set,
         batch_size=config.training_config.batch_size,
-        shuffle=config.training_config.batch_size
+        shuffle=config.training_config.shuffle_dataloader
     )
-    train_iter = iter(train_loader)
-
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = DDPM(
@@ -72,15 +66,18 @@ if __name__ == '__main__':
     lr=config.training_config.lr
     epochs=config.training_config.epochs
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-    criterion = masked_mse_loss
 
     scheduler_config = {
+        "use_scheduler": config.scheduler_config.use_scheduler,
         "optimizer": optimizer,
-        "max_lr": lr,
+        "max_lr": config.scheduler_config.max_lr,
         "epochs": epochs,
         "steps_per_epoch": len(train_loader),
-        "max_div_factor": config.scheduler_config.max_div_factor
+        "final_div_factor": config.scheduler_config.final_div_factor
     }
+
+    criterion = masked_mse_loss
+    backward_fn = create_backward_fn(scheduler_config['use_scheduler'])
 
     scheduler = create_scheduler(scheduler_config)
 
@@ -122,15 +119,18 @@ if __name__ == '__main__':
             # the noise estimation networks
             predicted_noise = model.unet(noisy_x, t.unsqueeze(-1))
 
-            loss = criterion(predicted_noise, noise, mask)
+            # calculate loss and perform backprop
+            batch_loss = criterion(predicted_noise, noise, mask)
+            backward_fn(
+                batch_loss=batch_loss, 
+                optimizer=optimizer, 
+                scheduler=scheduler
+            )
 
-            loss.backward()
-            optimizer.step()
-            scheduler.step()
-            total_loss += loss.item()
+            total_loss += batch_loss.item()
 
-            iterator.set_postfix(loss=f"{loss.item():.4f}")
-            metrics['step_wise_loss'].append(loss.item())
+            iterator.set_postfix(loss=f"{batch_loss.item():.4f}")
+            metrics['step_wise_loss'].append(batch_loss.item())
 
             if idx % (len(train_loader) // 5) == 0:
                 # at each 20% of the epoch, saves the orinal and noisy backbones,
@@ -148,3 +148,7 @@ if __name__ == '__main__':
     metrics['epoch_wise_loss'] = [metrics['step_wise_loss'][0]] + metrics['epoch_wise_loss']
     
     log_training_out(model, example_proteins, metrics)
+
+if __name__ == '__main__':
+    train()
+    
