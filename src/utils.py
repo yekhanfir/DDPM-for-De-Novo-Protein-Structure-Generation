@@ -4,14 +4,38 @@ import json
 import pickle
 
 def create_scheduler(config):
-    scheduler = OneCycleLR(
-        optimizer=config["optimizer"],
-        max_lr=config["max_lr"],
-        epochs=config["epochs"],
-        steps_per_epoch=config["steps_per_epoch"],
-        final_div_factor=config["final_div_factor"]
-    )
+    if config['use_scheduler']:
+        scheduler = OneCycleLR(
+            optimizer=config["optimizer"],
+            max_lr=config["max_lr"],
+            epochs=config["epochs"],
+            steps_per_epoch=config["steps_per_epoch"],
+            final_div_factor=config["final_div_factor"]
+        )
+    else: 
+        return None
     return scheduler
+
+def backward_pass(**kwargs):
+    batch_loss = kwargs.get('batch_loss')
+    optimizer = kwargs.get('optimizer')
+
+    batch_loss.backward()
+    optimizer.step()
+
+def backward_pass_with_scheduler(**kwargs):
+    scheduler = kwargs.get('scheduler')
+    backward_pass(**kwargs)
+    scheduler.step()
+
+
+def create_backward_fn(use_scheduler):
+    return (
+        backward_pass_with_scheduler 
+        if use_scheduler
+        else backward_pass
+    )
+
 
 def save_metrics(metrics_dict):
     with open("metrics_dict.json","w") as f:
