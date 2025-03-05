@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from model.model_utils import get_protein
+from data_handling.data_utils import get_protein
 
 class DDPM(nn.Module):
     """
