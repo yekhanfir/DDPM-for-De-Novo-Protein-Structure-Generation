@@ -10,6 +10,7 @@ from src import (
 import numpy as np
 import pandas as pd
 import torch
+import pickle
 
 
 def make_np_example(coords_dict):
@@ -201,3 +202,18 @@ def read_data_from_json(data_file_path, splits_file_path):
     cath_splits = pd.read_json(splits_file_path, lines=True)
     print('Done.')
     return df, cath_splits
+
+
+def export_protein_to_pdb(np_prot: np.ndarray, output_path: str):
+  """exports a given protein to a pdb file. 
+  Useful for later visualization.
+
+  Args:
+      np_prot (np.ndarray): ndarray representing a protein
+      output_path (str): path where pdb file should be saved
+  """
+  prot = get_protein(np_prot)
+  pdb_str = to_pdb(prot)
+
+  with open(output_path, 'w') as f:
+    f.write(pdb_str)
