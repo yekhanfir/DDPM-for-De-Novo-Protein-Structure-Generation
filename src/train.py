@@ -29,6 +29,9 @@ def train(cfg: omegaconf.DictConfig):
     Args:
         cfg (omegaconf.DictConfig): Experiment config
     """
+    experiment_output_path = (
+        hydra.core.hydra_config.HydraConfig.get().runtime.output_dir
+    )
     config = GlobalConfig(
         training_config = TrainingConfig(
             **omegaconf.OmegaConf.to_container(cfg.training_config)
@@ -152,7 +155,7 @@ def train(cfg: omegaconf.DictConfig):
 
     metrics['epoch_wise_loss'] = [metrics['step_wise_loss'][0]] + metrics['epoch_wise_loss']
     
-    log_training_out(model, example_proteins, metrics)
+    log_training_out(model, example_proteins, metrics, experiment_output_path)
 
 if __name__ == '__main__':
     train()
