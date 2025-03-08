@@ -51,4 +51,3 @@ class DatasetFromDataframe(torch.utils.data.Dataset):
                    in np_example.items()}
 
         return example
-    

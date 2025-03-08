@@ -10,7 +10,6 @@ from src import (
 import numpy as np
 import pandas as pd
 import torch
-import pickle
 
 
 def make_np_example(coords_dict):
