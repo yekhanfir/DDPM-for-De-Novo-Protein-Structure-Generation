@@ -24,6 +24,11 @@ from tqdm import tqdm
     config_name="unconditional_diffusion_config",
 )
 def train(cfg: omegaconf.DictConfig):
+    """Training experiment implementation.
+
+    Args:
+        cfg (omegaconf.DictConfig): Experiment config
+    """
     config = GlobalConfig(
         training_config = TrainingConfig(
             **omegaconf.OmegaConf.to_container(cfg.training_config)
