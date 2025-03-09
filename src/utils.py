@@ -2,9 +2,10 @@ import os
 import json
 import pickle
 import torch
+from typing import Any, Callable
 from torch.optim.lr_scheduler import OneCycleLR
 
-def create_scheduler(config):
+def create_scheduler(config: dict):
     """Creates learning rate scheduler based on config.
 
     Args:
@@ -25,7 +26,7 @@ def create_scheduler(config):
         return None
     return scheduler
 
-def backward_pass(**kwargs):
+def backward_pass(**kwargs: Any):
     """
     Perform backprop and update gradients.
     """
@@ -35,7 +36,7 @@ def backward_pass(**kwargs):
     batch_loss.backward()
     optimizer.step()
 
-def backward_pass_with_scheduler(**kwargs):
+def backward_pass_with_scheduler(**kwargs: Any):
     """
     Performs backprop and updates gradients and learning rate.
     """
@@ -43,7 +44,7 @@ def backward_pass_with_scheduler(**kwargs):
     backward_pass(**kwargs)
     scheduler.step()
 
-def create_backward_fn(use_scheduler):
+def create_backward_fn(use_scheduler: bool):
     """Creates backward callable function.
 
     Args:
@@ -58,7 +59,7 @@ def create_backward_fn(use_scheduler):
         else backward_pass
     )
 
-def save_metrics(metrics_dict, ouput_path):
+def save_metrics(metrics_dict: dict, ouput_path: str):
     """Saves training metrics to output path.
 
     Args:
@@ -71,7 +72,7 @@ def save_metrics(metrics_dict, ouput_path):
     with open(metrics_out_path,"w") as f:
         json.dump(metrics_dict, f)
 
-def save_model(model, output_path):
+def save_model(model: Any, output_path: str):
     """Saves model checkpoint.
 
     Args:
@@ -87,7 +88,7 @@ def save_model(model, output_path):
     torch.save(dict_to_save, model_out_path)
 
 
-def save_training_examples(training_examples, output_path):
+def save_training_examples(training_examples: dict, output_path: str):
     """Saves training inference examples, for later visualization.
 
     Args:
@@ -102,10 +103,10 @@ def save_training_examples(training_examples, output_path):
     f.close()
 
 def log_training_out(
-        model, 
-        training_examples, 
-        metrics_dict, 
-        output_path
+        model: Any, 
+        training_examples: dict, 
+        metrics_dict: dict, 
+        output_path: str,
     ):
     """Saves training experiment result.
 
