@@ -1,4 +1,6 @@
 from torch import nn
+#TODO: add implementation of group UNet to leverage equivariance
+#https://github.com/dogeplusplus/group-unet/blob/main/group_unet/layers.py#L93
 
 class UNet(nn.Module):
     """
