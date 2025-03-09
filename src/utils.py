@@ -2,10 +2,10 @@ import os
 import json
 import pickle
 import torch
-from typing import Any, Callable
+from typing import Any, Callable, Union
 from torch.optim.lr_scheduler import OneCycleLR
 
-def create_scheduler(config: dict):
+def create_scheduler(config: dict) -> Union[None, OneCycleLR]:
     """Creates learning rate scheduler based on config.
 
     Args:
@@ -26,7 +26,7 @@ def create_scheduler(config: dict):
         return None
     return scheduler
 
-def backward_pass(**kwargs: Any):
+def backward_pass(**kwargs: Any) -> None:
     """
     Perform backprop and update gradients.
     """
@@ -36,7 +36,7 @@ def backward_pass(**kwargs: Any):
     batch_loss.backward()
     optimizer.step()
 
-def backward_pass_with_scheduler(**kwargs: Any):
+def backward_pass_with_scheduler(**kwargs: Any) -> None:
     """
     Performs backprop and updates gradients and learning rate.
     """
@@ -44,7 +44,7 @@ def backward_pass_with_scheduler(**kwargs: Any):
     backward_pass(**kwargs)
     scheduler.step()
 
-def create_backward_fn(use_scheduler: bool):
+def create_backward_fn(use_scheduler: bool) -> Callable:
     """Creates backward callable function.
 
     Args:
@@ -59,7 +59,7 @@ def create_backward_fn(use_scheduler: bool):
         else backward_pass
     )
 
-def save_metrics(metrics_dict: dict, ouput_path: str):
+def save_metrics(metrics_dict: dict, ouput_path: str) -> None:
     """Saves training metrics to output path.
 
     Args:
@@ -72,7 +72,7 @@ def save_metrics(metrics_dict: dict, ouput_path: str):
     with open(metrics_out_path,"w") as f:
         json.dump(metrics_dict, f)
 
-def save_model(model: Any, output_path: str):
+def save_model(model: Any, output_path: str) -> None:
     """Saves model checkpoint.
 
     Args:
@@ -88,7 +88,7 @@ def save_model(model: Any, output_path: str):
     torch.save(dict_to_save, model_out_path)
 
 
-def save_training_examples(training_examples: dict, output_path: str):
+def save_training_examples(training_examples: dict, output_path: str) -> None:
     """Saves training inference examples, for later visualization.
 
     Args:
@@ -107,7 +107,7 @@ def log_training_out(
         training_examples: dict, 
         metrics_dict: dict, 
         output_path: str,
-    ):
+    )-> None:
     """Saves training experiment result.
 
     Args:
