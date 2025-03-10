@@ -9,3 +9,4 @@ torchmetrics
 hydra-core
 omegaconf
 biopython
+datasets
