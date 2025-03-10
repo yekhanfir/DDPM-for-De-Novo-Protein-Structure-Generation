@@ -1,6 +1,7 @@
 data_config:
-  data_file_path: /app/data/chain_set.jsonl
-  splits_file_path: /app/data/chain_set_splits.json
+  train_data_path: /app/data/chain_set.jsonl
+  validation_data_path:
+  hf_data_path: # dataset path on huggingface
   max_seq_len: 256
 
 model_config:
@@ -10,7 +11,7 @@ model_config:
 
 training_config:
   lr: 3e-4
-  epochs: 10
+  epochs: 2
   batch_size: 16
   shuffle_dataloader: True
 

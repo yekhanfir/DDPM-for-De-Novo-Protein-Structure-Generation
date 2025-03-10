@@ -10,7 +10,7 @@ from src import (
 import numpy as np
 import pandas as pd
 import torch
-
+from functools import partial
 
 def make_np_example(coords_dict):
     """Make a dictionary of non-batched numpy protein features."""
@@ -195,12 +195,30 @@ def to_pdb(prot: Protein) -> str:
   return '\n'.join(pdb_lines) + '\n'  # Add terminating newline.
 
 
-def read_data_from_json(data_file_path, splits_file_path):
+def read_local_data(path):
     print('Reading data...')
-    df = pd.read_json(data_file_path, lines=True)
-    cath_splits = pd.read_json(splits_file_path, lines=True)
+    extension = path.split(".")[-1]
+    if extension in ["json", "jsonl"] :
+      data_reader = pd.read_json
+      if extension == "jsonl":
+         data_reader = partial(data_reader, lines=True)
+         
+    elif extension == "csv":
+      data_reader = pd.read_csv
+
+    elif extension == "parquet":
+       data_reader = pd.read_parquet
+       
+    else:
+       raise NotImplementedError(
+          f"""
+          Data file extension '.{extension}' not supported! \n 
+          must be json, jsonl, csv or parquet.
+          """
+        )
+    df = data_reader(path)
     print('Done.')
-    return df, cath_splits
+    return df
 
 
 def export_protein_to_pdb(np_prot: np.ndarray, output_path: str):

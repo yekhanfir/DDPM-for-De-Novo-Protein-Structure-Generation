@@ -1,43 +1,36 @@
+import pandas as pd
 import torch
 from data_handling.data_utils import (
     make_np_example, 
     make_fixed_size, 
     center_positions,
-    read_data_from_json,
+    read_local_data,
 )
+from datasets import load_dataset
 
 class DatasetFromDataframe(torch.utils.data.Dataset):
     """Load coordinates data from a DataFrame, currently from the 'coords' column."""
 
-    def __init__(self, data_config):
-        self.dataframe, self.splits = self.get_data(
-            data_config.data_file_path,
-            data_config.splits_file_path
-        )
-        self.dataframe['split'] = self.dataframe.name.apply(
-            lambda x: self.get_split(x)
-        )
+    def __init__(self, data_path, data_source, split=None, max_seq_len=512):
+        if data_source == "local":
+            self.dataframe = read_local_data(data_path)
+        else:
+            print("Reading data from HF...")
+            hf_dataset = load_dataset(data_path)[split]
+            cols_to_remove = [
+                col for col in hf_dataset.column_names if col not in [
+                    "seq", "coords", 
+                ]
+            ]
+            hf_dataset = hf_dataset.remove_columns(
+                cols_to_remove
+            )
+            self.dataframe = pd.DataFrame(hf_dataset)
+            print("Done.")
+
         self.dataframe['seq_len'] = self.dataframe.seq.apply(lambda x: len(x))
 
-        self.max_seq_len = data_config.max_seq_len
-
-    def get_data(self, data_file_path, splits_file_path):
-        df, splits = read_data_from_json(
-            data_file_path, 
-            splits_file_path
-        )
-        return df, splits
-
-    def get_split(self, pdb_name):
-        if pdb_name in self.splits.train[0]:
-            return 'train'
-        elif pdb_name in self.splits.validation[0]:
-            return 'validation'
-        elif pdb_name in self.splits.test[0]:
-            return 'test'
-        else:
-            return 'None'
-
+        self.max_seq_len = max_seq_len
 
     def __len__(self):
         return len(self.dataframe)

@@ -2,8 +2,9 @@ from dataclasses import dataclass
 
 @dataclass
 class DataConfig:
-    data_file_path: str
-    splits_file_path: str
+    train_data_path: str
+    validation_data_path: str
+    hf_data_path: str
     max_seq_len: str
 
 @dataclass
