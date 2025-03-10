@@ -47,7 +47,30 @@ def train(cfg: omegaconf.DictConfig):
         )
     )
 
-    train_set = DatasetFromDataframe(config.data_config)
+    if config.data_config.train_data_path:
+        train_data_path = config.data_config.train_data_path
+        source = "local"
+        split = None
+    else:
+        if config.data_config.hf_data_path:
+            train_data_path = config.data_config.hf_data_path
+            source = "hf" # to indicate loading from huggingface
+            split = "train"
+        else:
+            raise FileNotFoundError(
+                """
+                A data file has to be specified! \n,
+                at least provide HF path or local path. 
+                """
+            )
+     
+    train_set = DatasetFromDataframe(
+        data_path=train_data_path, 
+        data_source=source, 
+        split=split,
+        max_seq_len=config.data_config.max_seq_len
+    )
+
     train_loader = torch.utils.data.DataLoader(
         train_set,
         batch_size=config.training_config.batch_size,
