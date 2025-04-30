@@ -95,9 +95,8 @@ Training includes periodic logging of sample reconstructions to visualize model 
 Special thanks to the following contributors and resources for their inspiration and support:
 
 - [Lucidrains (Phil Wang)](https://github.com/lucidrains)
-- Umar Jamil
-- Rosetta Commons
-
+- [Umar Jamil](https://github.com/hkproj)
+- [Rosetta Commons](https://www.youtube.com/@RosettaCommons)
 ---
 
 ## 📄 References
