@@ -90,6 +90,13 @@ Training includes periodic logging of sample reconstructions to visualize model 
 
 ---
 
+## How to run ? 
+### Build image
+- docker build -t protein-diffusion .
+ 
+### Run container
+- docker run --rm --gpus all --env PYTHONPATH=":/app/src" --volume .:/app -it protein-diffusion
+
 ## 🙏 Acknowledgments
 
 Special thanks to the following contributors and resources for their inspiration and support:
