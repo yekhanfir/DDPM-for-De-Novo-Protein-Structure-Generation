@@ -54,6 +54,7 @@ Training includes periodic logging of sample reconstructions to visualize model 
 
 ### Visualizations
 - Samples of noisy vs. denoised backbones saved during training.
+- ![Visualizing Denoising Examples](images/visual_examples.png)
 
 ### Structural Similarity Index (SSIM)
 - Used to compare real vs. denoised samples (time-step dependent metric).
@@ -61,6 +62,8 @@ Training includes periodic logging of sample reconstructions to visualize model 
 ### Sampling Results
 - Sampling from pure noise did not yield meaningful structures.
 - Likely due to insufficient training or implementation issues.
+
+![Visualizing Denoising Examples](images/evaluation_examples.png)
 
 ---
 
