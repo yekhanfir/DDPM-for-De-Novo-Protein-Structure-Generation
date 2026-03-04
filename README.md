@@ -6,7 +6,7 @@ This project implements a minimal Denoising Diffusion Probabilistic Model (DDPM)
 
 ## 📌 Overview
 
-The goal is to train a UNet-based diffusion model to convert Gaussian noise into meaningful 3D protein backbone structures. Applications include de novo protein design and targeted protein engineering for use in medicine and drug discovery.
+The goal of this project is to implement as scheme or dummy training of a UNet-based diffusion model to convert Gaussian noise into meaningful 3D protein backbone structures. Applications include de novo protein design and targeted protein engineering for use in medicine and drug discovery.
 
 ---
 
